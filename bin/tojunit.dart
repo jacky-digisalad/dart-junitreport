@@ -31,7 +31,11 @@ Future<Report> createReport(Arguments arguments, Stream<String> lines) async {
     if (!line.startsWith('{')) {
       continue;
     }
-    processor.process(json.decode(line) as Map<String, dynamic>);
+    final result = json.decode(line) as Map<String, dynamic>;
+    if (result['messageType'] == 'print') {
+      continue;
+    }
+    processor.process(result);
   }
   return processor.report;
 }
@@ -169,12 +173,12 @@ class Arguments {
   final String package;
 
   Arguments(
-    this.source,
-    this.target,
-    this.timestamp,
-    this.base,
-    this.package,
-  );
+      this.source,
+      this.target,
+      this.timestamp,
+      this.base,
+      this.package,
+      );
 }
 
 class _Source {
